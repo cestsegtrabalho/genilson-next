@@ -2,12 +2,6 @@ import { NextResponse } from "next/server";
 import connectDB from "@/database/db";
 import Curso from "@/models/cursoModel";
 
-interface Params {
-  params: {
-    nameUrl: string;
-  };
-}
-
 export async function GET(request: Request, 
   context: { params: Promise<{nameUrl: string}> }) {
   try {

@@ -2,12 +2,6 @@ import { NextResponse } from "next/server";
 import connectDB from "@/database/db";
 import Curso from "@/models/cursoModel";
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
-
 // PATCH - Atualizar
 export async function PATCH(request: Request, 
   context: { params: Promise<{id: string}> }
