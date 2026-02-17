@@ -1,21 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/database/db";
 import GabaritoModel from "@/models/gabaritoModel";
 
-type RouteParams = {
-  params: {
-    titulo: string;
-  };
-};
-
 export async function GET(
-  _request: Request,
-  { params }: RouteParams
+  _request: NextRequest,
+  context: { params: Promise<{ titulo: string }> }
 ) {
   try {
     await connectDB();
 
-    const { titulo } = params;
+    const { titulo } = await context.params;
 
     const gabarito = await GabaritoModel.findOne({ titulo });
 
@@ -28,7 +22,7 @@ export async function GET(
 
     return NextResponse.json(gabarito, { status: 200 });
 
-  } catch (error: unknown) {
+  } catch {
     return NextResponse.json(
       { message: "Erro ao buscar gabarito" },
       { status: 500 }
