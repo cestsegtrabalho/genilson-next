@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 
 const allowedOrigins = [
   "http://localhost:3000",
+  "http://localhost:3001",
   "https://genilson-next.vercel.app",
 ];
 
@@ -19,7 +20,7 @@ export function middleware(request: NextRequest) {
       headers: {
         "Access-Control-Allow-Origin": origin,
         "Access-Control-Allow-Methods":
-          "GET, POST, PUT, DELETE, OPTIONS",
+          "GET, POST, PUT, PATCH, DELETE, OPTIONS",
         "Access-Control-Allow-Headers":
           "Content-Type, Authorization",
       },
@@ -34,7 +35,7 @@ export function middleware(request: NextRequest) {
 
   response.headers.set(
     "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
   );
   response.headers.set(
     "Access-Control-Allow-Headers",

@@ -6,21 +6,24 @@ import db from "@/database/db";
 
 export async function GET(
   _request: NextRequest,
-  context: { params: Promise<{ email: string }> }
+  context: { params: Promise<{ username: string }> }
 ) {
   try {
     await db();
 
-    const { email } = await context.params;
+    const { username } = await context.params;
 
-    if (!email) {
+    if (!username) {
       return NextResponse.json(
         { message: "E-mail não fornecido" },
         { status: 400 }
       );
     }
 
-    const user = await User.findOne({ email });
+    // Find user and exclude sensitive fields
+    const user = await User.findOne({ username }).select(
+      "_id name username email phone"
+    );
 
     if (!user) {
       return NextResponse.json(
@@ -29,15 +32,20 @@ export async function GET(
       );
     }
 
+    // Return only necessary fields (flat structure)
     return NextResponse.json(
       {
-        message: "Login feito com sucesso",
-        user,
+        id: user._id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        phone: user.phone,
       },
       { status: 200 }
     );
 
-  } catch {
+  } catch (error) {
+    console.error("Erro ao buscar usuário:", error);
     return NextResponse.json(
       { message: "Erro no servidor ao fazer login" },
       { status: 500 }

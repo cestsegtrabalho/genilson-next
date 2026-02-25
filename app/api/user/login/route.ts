@@ -30,19 +30,28 @@ export async function POST(request: Request) {
       );
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select("+password");
 
-    if (!user) {
+    if (!user || !user.password) {
       return NextResponse.json(
-        { message: "Usuário não encontrado" },
+        { error: "Email ou senha incorreto" },
         { status: 401 }
       );
     }
 
-    const passwordIsValid = await bcrypt.compare(
+    let passwordIsValid = false;
+
+    try {
+      passwordIsValid = await bcrypt.compare(
       password,
       user.password as string
     );
+    } catch (error) {
+      return NextResponse.json(
+        { error: 'Senha incorreta' },
+        { status: 401 }
+      );
+    }
 
     if (!passwordIsValid) {
       return NextResponse.json(
@@ -59,7 +68,7 @@ export async function POST(request: Request) {
         userId: user._id.toString(),
       } as JwtPayload,
       secretKey,
-      { expiresIn: "7d" }
+      { expiresIn: "10000h" }
     );
 
     return NextResponse.json({
