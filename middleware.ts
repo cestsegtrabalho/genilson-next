@@ -4,6 +4,7 @@ import type { NextRequest } from "next/server";
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
+  "https://app.cestsegtrabalho.com.br",
   "https://genilson-next.vercel.app",
 ];
 
